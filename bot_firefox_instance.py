@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from time import sleep, localtime
+from datetime import datetime, date
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+# exceptions
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.common.exceptions import NoSuchElementException
@@ -12,10 +14,6 @@ from selenium.webdriver.common.alert import Alert
 from bs4 import BeautifulSoup
 # secure imports
 import configparser
-# import utilities
-from utilities.buttons import find_contact
-from utilities.text_boxes import search_contact, type_chat_message
-# exceptions
 
 def create_driver_session(session_id, executor_url):
     from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
@@ -40,17 +38,6 @@ def create_driver_session(session_id, executor_url):
     RemoteWebDriver.execute = org_command_execute
 
     return new_driver
-
-def send_message(driver, contact, message):
-    """
-    Args:
-        contact : str : name of contact or group
-        message : str
-    """
-    TIME_WAIT = 3
-    search_contact(driver, contact)
-    sleep(TIME_WAIT)
-    type_chat_message(driver, message)
 
 def close_father_webdriver(driver):
     driver.close() # better just press ENTER at the main bash
@@ -105,13 +92,15 @@ def get_to_apointments(driver):
         with open("Output_Exception-3.html","a") as f:
             f.write(f"{driver.page_source}\n\n\n")
         with open("config/session/shared_file.memory","w") as f:
-            f.write("¡¡Hay algo raro, mirar la web!!")
+            f.write(f"{datetime.today()} ¡¡Hay algo raro, mirar la web!!")
         driver.switch_to.window(driver.window_handles[1])
         driver.close()
         return -3
     sleep(10)
     if vars["service_container"].text.find("No hay horas disponibles") >= 0:
         print("Step 7\t->\tDo nothing") # ----------------------------
+        with open("config/session/shared_file.memory","w") as f:
+            f.write(f"{datetime.today()} Nada todavía :(")
         driver.switch_to.window(driver.window_handles[1])
         driver.close()
         return 0
@@ -120,7 +109,7 @@ def get_to_apointments(driver):
         with open("Output_GoodExit.html","a") as f:
             f.write(f"{driver.page_source}\n\n\n")
         with open("config/session/shared_file.memory","w") as f:
-            f.write("¡¡Cita disponible!!")
+            f.write(f"{datetime.today()} ¡¡Cita disponible!!")
         driver.switch_to.window(driver.window_handles[1])
         driver.close()
         return 1
@@ -132,11 +121,6 @@ def main():
     session_id =  config['SESSION']['session_id']
     executor_url = config['SESSION']['executor_url']
     driver = create_driver_session(session_id, executor_url)
-
-    # t = localtime()
-    # while (t[3]-send_time[3]<0 or t[4]-send_time[4]<0):
-    #     sleep(1)
-    #     t=localtime()
 
     driver.switch_to.window(driver.window_handles[0])
 		
@@ -156,6 +140,12 @@ if __name__ == "__main__":
     try:
         while 1:
             main()
-            sleep(5*60)
+            if (datetime.now().hour == 5 and 55<= datetime.now().minute <=59)\
+            or (datetime.now().hour == 6 and 0<= datetime.now().minute <=35):
+                print("\t\t\tsleeping 10 minutes")
+                sleep(10*60)
+            else:
+                print("\t\t\tsleeping 20 minutes")
+                sleep(20*60)
     except KeyboardInterrupt:
         print('Interrupted')

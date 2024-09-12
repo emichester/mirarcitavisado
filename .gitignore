@@ -8,7 +8,7 @@ bot_whatsapp_chrome.py
 bot_whatsapp_firefox.py.original
 
 ## logs
-geckodriver.log
+*.log
 
 ## cache
 __pycache__/
