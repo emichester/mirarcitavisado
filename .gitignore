@@ -18,3 +18,6 @@ config/session/__pycache__/
 
 ## outputs
 *.html
+
+## environment
+.venv
