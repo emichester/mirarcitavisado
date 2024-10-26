@@ -96,7 +96,7 @@ def get_to_apointments(driver):
         driver.switch_to.window(driver.window_handles[1])
         driver.close()
         return -3
-    sleep(10)
+    sleep(30)
     if vars["service_container"].text.find("No hay horas disponibles") >= 0:
         print("Step 7\t->\tDo nothing") # ----------------------------
         with open("config/session/shared_file.memory","w") as f:
@@ -131,21 +131,33 @@ def main():
 
     get_to_apointments(driver)
 
-    sleep(5)
+    sleep(2)
     driver = create_driver_session(session_id, executor_url)
     driver.switch_to.window(driver.window_handles[0])
     driver.get('https://www.duckduckgo.com')
 
 if __name__ == "__main__":
     try:
+        # while 1:
+        #     if (datetime.now().hour == 5 and 55<= datetime.now().minute <=59)\
+        #     or (datetime.now().hour == 6 and 0<= datetime.now().minute <=35):
+        #         main()
+        #         print("\t\t\tsleeping 5 minutes")
+        #         sleep(5*60)
+        #     else:
+        #         # print("\t\t\tsleeping 20 minutes")
+        #         # sleep(20*60)
+        #         sleep(20)
         while 1:
-            main()
-            if (datetime.now().hour == 5 and 55<= datetime.now().minute <=59)\
-            or (datetime.now().hour == 6 and 0<= datetime.now().minute <=35):
-                print("\t\t\tsleeping 10 minutes")
-                sleep(10*60)
-            else:
-                print("\t\t\tsleeping 20 minutes")
-                sleep(20*60)
+            with open("/home/emilio/PaginasWeb/vpn/LOCK.txt","w") as f:
+                f.write("LOCKED")
+            try:
+                main()
+            except TimeoutException:
+                print("\t\t\tnavigation failed...")
+            with open("/home/emilio/PaginasWeb/vpn/LOCK.txt","w") as f:
+                f.write("FREE")
+            print("\t\t\tsleeping...")
+            sleep(4*20)
     except KeyboardInterrupt:
         print('Interrupted')

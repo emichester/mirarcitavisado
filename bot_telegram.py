@@ -192,7 +192,7 @@ def mirar_archivo_callback(context):
     logging.debug('\t->Iniciando tarea periódica: mirar_archivo')
     with open("config/session/shared_file.memory","r") as f:
         text = f.read()
-    if text.find("¡¡Cita disponible!!") >= 0 or \
+    if text.find("Cita disponible") >= 0 or \
        text.find("¡¡Hay algo raro, mirar la web!!") >= 0:
         context.bot.send_message(chat_id=GROUPO_CHAT_ID,text=text)
     else:
@@ -247,7 +247,7 @@ def main():
     #new_job = updater.job_queue.run_repeating(callback=renovador, interval=TIME_INTERVAL_RENOVADOR, first=0)
     #new_job = updater.job_queue.run_repeating(callback=pronostico, interval=TIME_INTERVAL_ENVIAR_TIEMPO, first=0)
 
-    new_job = updater.job_queue.run_repeating(callback=mirar_archivo_callback, interval=10, first=0)
+    new_job = updater.job_queue.run_repeating(callback=mirar_archivo_callback, interval=30, first=0)
 
     # ------------------------------------------------------------------------
 
