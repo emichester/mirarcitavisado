@@ -256,7 +256,7 @@ if __name__ == "__main__":
         #         # sleep(20*60)
         #         sleep(20)
         while 1:
-            with open("/home/emilio/PaginasWeb/vpn/LOCK.txt","w", encoding="utf-8") as f:
+            with open("../vpn/LOCK.txt","w", encoding="utf-8") as f:
                 f.write("LOCKED")
             
             try:
@@ -289,7 +289,7 @@ if __name__ == "__main__":
                     # browser.close()
                     print("\t\t\tdriver was not closed after exception")
             finally:
-                with open("/home/emilio/PaginasWeb/vpn/LOCK.txt","w") as f:
+                with open("../vpn/LOCK.txt","w") as f:
                     f.write("FREE")
                 print("\t\t\tsleeping...")
                 # sleep(7*10)
